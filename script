@@ -1,0 +1,137 @@
+-- PXZ HUB - Script Hub with Close Button + Reopen Button
+
+local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
+local player = Players.LocalPlayer
+local gui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+gui.Name = "PXZHub"
+gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+gui.ResetOnSpawn = false
+
+-- Main Frame
+local frame = Instance.new("Frame")
+frame.Parent = gui
+frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+frame.Position = UDim2.new(0.35, 0, 0.25, 0)
+frame.Size = UDim2.new(0, 320, 0, 280)
+frame.Active = true
+frame.Draggable = true
+frame.BorderSizePixel = 0
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 12)
+
+-- Title Bar
+local titleBar = Instance.new("Frame")
+titleBar.Parent = frame
+titleBar.Size = UDim2.new(1, 0, 0, 40)
+titleBar.BackgroundTransparency = 1
+
+local title = Instance.new("TextLabel")
+title.Parent = titleBar
+title.Text = "PXZ HUB"
+title.Font = Enum.Font.GothamBold
+title.TextSize = 24
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.BackgroundTransparency = 1
+title.Position = UDim2.new(0, 10, 0, 5)
+title.Size = UDim2.new(1, -50, 1, 0)
+title.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Close Button
+local closeBtn = Instance.new("TextButton")
+closeBtn.Parent = titleBar
+closeBtn.Text = "X"
+closeBtn.Size = UDim2.new(0, 30, 0, 30)
+closeBtn.Position = UDim2.new(1, -35, 0, 5)
+closeBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.TextSize = 18
+Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0, 6)
+
+-- Toggle Reopen Button
+local reopenBtn = Instance.new("TextButton")
+reopenBtn.Parent = gui
+reopenBtn.Text = "📂 Open PXZ Hub"
+reopenBtn.Size = UDim2.new(0, 160, 0, 40)
+reopenBtn.Position = UDim2.new(0, 10, 1, -50)
+reopenBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+reopenBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+reopenBtn.Font = Enum.Font.Gotham
+reopenBtn.TextSize = 16
+reopenBtn.Visible = false
+Instance.new("UICorner", reopenBtn).CornerRadius = UDim.new(0, 8)
+
+reopenBtn.MouseButton1Click:Connect(function()
+	frame.Visible = true
+	reopenBtn.Visible = false
+end)
+
+closeBtn.MouseButton1Click:Connect(function()
+	frame.Visible = false
+	reopenBtn.Visible = true
+end)
+
+-- Layout
+local layout = Instance.new("UIListLayout", frame)
+layout.Padding = UDim.new(0, 10)
+layout.SortOrder = Enum.SortOrder.LayoutOrder
+layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+
+local padding = Instance.new("UIPadding", frame)
+padding.PaddingTop = UDim.new(0, 10)
+padding.PaddingLeft = UDim.new(0, 10)
+padding.PaddingRight = UDim.new(0, 10)
+padding.PaddingBottom = UDim.new(0, 10)
+
+-- Button Creator
+local function createButton(text)
+	local btn = Instance.new("TextButton")
+	btn.Text = text
+	btn.Size = UDim2.new(1, 0, 0, 45)
+	btn.Font = Enum.Font.Gotham
+	btn.TextSize = 18
+	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+	btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	btn.BorderSizePixel = 0
+
+	Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 8)
+
+	btn.MouseEnter:Connect(function()
+		btn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+	end)
+	btn.MouseLeave:Connect(function()
+		btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	end)
+
+	return btn
+end
+
+-- Your Scripts
+local scripts = {
+	{ name = "1. DUPE PETS (VISUAL)", url = "https://raw.githubusercontent.com/GRPGaming/Key-System/refs/heads/Xycer-Hub-Script/ZyGaG6" },
+	{ name = "2. No-Lag", url = "https://pastebin.com/raw/XHMN2zpp" },
+	{ name = "3. Rift", url = "https://rifton.top/loader.lua" }
+}
+
+-- Add Script Buttons
+for _, script in ipairs(scripts) do
+	local btn = createButton(script.name)
+	btn.Parent = frame
+	btn.MouseButton1Click:Connect(function()
+		local success, err = pcall(function()
+			loadstring(game:HttpGet(script.url))()
+		end)
+		if not success then
+			warn("Failed to load script: " .. err)
+		end
+	end)
+end
+
+-- Optional Toggle with RightShift
+UIS.InputBegan:Connect(function(input, processed)
+	if not processed and input.KeyCode == Enum.KeyCode.RightShift then
+		local isVisible = frame.Visible
+		frame.Visible = not isVisible
+		reopenBtn.Visible = isVisible
+	end
+end)
