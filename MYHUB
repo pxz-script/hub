@@ -1,4 +1,4 @@
--- PXZ HUB - Updated with new Dupe Script + Toggle Button
+-- PXZ HUB - Final Version with Updated DUPE Script and Reopen Button
 
 local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
@@ -106,27 +106,20 @@ local function createButton(text)
 	return btn
 end
 
--- Updated Scripts List
+-- Script List (with final DUPE PETS script)
 local scripts = {
-	{ name = "1. DUPE PETS (VISUAL)", code = [[
-		local Spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/ataturk123/GardenSpawner/refs/heads/main/Spawner.lua"))()
-		Spawner.Load()
-	]] },
+	{ name = "1. DUPE PETS (VISUAL)", url = "https://raw.githubusercontent.com/GRPGaming/Key-System/refs/heads/Xycer-Hub-Script/ZyGaG6" },
 	{ name = "2. No-Lag", url = "https://pastebin.com/raw/XHMN2zpp" },
 	{ name = "3. Rift", url = "https://rifton.top/loader.lua" }
 }
 
--- Add Script Buttons
+-- Add Buttons
 for _, script in ipairs(scripts) do
 	local btn = createButton(script.name)
 	btn.Parent = frame
 	btn.MouseButton1Click:Connect(function()
 		local success, err = pcall(function()
-			if script.code then
-				loadstring(script.code)()
-			elseif script.url then
-				loadstring(game:HttpGet(script.url))()
-			end
+			loadstring(game:HttpGet(script.url))()
 		end)
 		if not success then
 			warn("Failed to load script: " .. err)
@@ -134,7 +127,7 @@ for _, script in ipairs(scripts) do
 	end)
 end
 
--- Optional: RightShift to toggle
+-- Optional: Toggle UI with RightShift
 UIS.InputBegan:Connect(function(input, processed)
 	if not processed and input.KeyCode == Enum.KeyCode.RightShift then
 		local isVisible = frame.Visible
