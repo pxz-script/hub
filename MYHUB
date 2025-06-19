@@ -1,4 +1,4 @@
--- PXZ HUB - Script Hub with Close Button + Reopen Button
+-- PXZ HUB - Updated with new Dupe Script + Toggle Button
 
 local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
@@ -48,7 +48,7 @@ closeBtn.Font = Enum.Font.GothamBold
 closeBtn.TextSize = 18
 Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0, 6)
 
--- Toggle Reopen Button
+-- Reopen Button
 local reopenBtn = Instance.new("TextButton")
 reopenBtn.Parent = gui
 reopenBtn.Text = "📂 Open PXZ Hub"
@@ -71,7 +71,7 @@ closeBtn.MouseButton1Click:Connect(function()
 	reopenBtn.Visible = true
 end)
 
--- Layout
+-- Layout and Padding
 local layout = Instance.new("UIListLayout", frame)
 layout.Padding = UDim.new(0, 10)
 layout.SortOrder = Enum.SortOrder.LayoutOrder
@@ -106,9 +106,12 @@ local function createButton(text)
 	return btn
 end
 
--- Your Scripts
+-- Updated Scripts List
 local scripts = {
-	{ name = "1. DUPE PETS (VISUAL)", url = "https://raw.githubusercontent.com/GRPGaming/Key-System/refs/heads/Xycer-Hub-Script/ZyGaG6" },
+	{ name = "1. DUPE PETS (VISUAL)", code = [[
+		local Spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/ataturk123/GardenSpawner/refs/heads/main/Spawner.lua"))()
+		Spawner.Load()
+	]] },
 	{ name = "2. No-Lag", url = "https://pastebin.com/raw/XHMN2zpp" },
 	{ name = "3. Rift", url = "https://rifton.top/loader.lua" }
 }
@@ -119,7 +122,11 @@ for _, script in ipairs(scripts) do
 	btn.Parent = frame
 	btn.MouseButton1Click:Connect(function()
 		local success, err = pcall(function()
-			loadstring(game:HttpGet(script.url))()
+			if script.code then
+				loadstring(script.code)()
+			elseif script.url then
+				loadstring(game:HttpGet(script.url))()
+			end
 		end)
 		if not success then
 			warn("Failed to load script: " .. err)
@@ -127,7 +134,7 @@ for _, script in ipairs(scripts) do
 	end)
 end
 
--- Optional Toggle with RightShift
+-- Optional: RightShift to toggle
 UIS.InputBegan:Connect(function(input, processed)
 	if not processed and input.KeyCode == Enum.KeyCode.RightShift then
 		local isVisible = frame.Visible
